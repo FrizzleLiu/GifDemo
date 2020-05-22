@@ -1,7 +1,10 @@
 package com.jni.gifdemo;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -40,9 +43,21 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ndkLoadGif();
+                requestPerms();
             }
         });
+    }
+
+    private void requestPerms() {
+        //权限,简单处理下
+        if (Build.VERSION.SDK_INT>Build.VERSION_CODES.N) {
+            String[] perms= {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if (checkSelfPermission(perms[0]) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(perms,200);
+            }else {
+                ndkLoadGif();
+            }
+        }
     }
 
     public void ndkLoadGif() {
